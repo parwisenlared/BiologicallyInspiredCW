@@ -24,6 +24,10 @@ def gaussian(x):
     """Returns the gaussian activation for a given variable x"""
     return np.exp(-((x**2)/2))
 
+def null(x):
+    """Returns the null activation for a given variable x"""
+    return x*0
+
 # ----- IMPUTS AND OUTPUTS ------------
 
 #Sinus
@@ -134,6 +138,7 @@ class NeuralNetwork(object):
 #nn1.mse() 
 
 # call fitness: nn1.fitness
+
 
 # Show the neural network predicted output compared to the real output
 
