@@ -195,5 +195,5 @@ if __name__ == "__main__":
     plt.figure()
 
     plt.plot(NN.y,"red",yHat,"blue")
-    plt.title("Real vs Predicted output")
+    plt.title("Desired vs Predicted output")
     plt.show()
