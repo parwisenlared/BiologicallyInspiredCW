@@ -177,6 +177,7 @@ if __name__ == "__main__":
     
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
         pso.optimise()
+        #error_list.append = pso.global_best_value
         iterations +=1
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
 
@@ -194,5 +195,5 @@ if __name__ == "__main__":
     plt.figure()
 
     plt.plot(NN.y,"red",yHat,"blue")
-    plt.title("y,yHat")
+    plt.title("Real vs Predicted output")
     plt.show()
