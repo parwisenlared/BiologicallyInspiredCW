@@ -177,7 +177,7 @@ if __name__ == "__main__":
     
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
         pso.optimise()
-        #error_list.append = pso.global_best_value
+        error_list.append(pso.global_best_value)
         iterations +=1
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
 
@@ -196,4 +196,10 @@ if __name__ == "__main__":
 
     plt.plot(NN.y,"red",yHat,"blue")
     plt.title("Desired vs Predicted output")
+    plt.show()
+
+    fitness = error_list
+    plt.figure()
+    plt.plot(fitness)
+    plt.title("Mean Square Error")
     plt.show()
