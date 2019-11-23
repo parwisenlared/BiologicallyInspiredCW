@@ -27,7 +27,7 @@ def gaussian(x):
 # ----- IMPUTS AND OUTPUTS ------------
 
 #Sinus
-data = np.loadtxt("scripts/Data/1in_sine.txt")
+data = np.loadtxt("Data/1in_sine.txt")
 x = data[:, :1] # All input variables stored as x
 y = data[:, 1:] # All test variables stored as y
 
@@ -128,16 +128,17 @@ class NeuralNetwork(object):
 
 # Steps to make the neural network work: first call the method neural network, then forward, then fitness
 # then call the variable network.fitness
-nn1 = NeuralNetwork(x,y)
-nn1.forward()
-a = nn1.mse() 
-len(nn1.yHat)
+
+#nn1 = NeuralNetwork(x,y)
+#nn1.forward()
+#nn1.mse() 
+
+# call fitness: nn1.fitness
 
 # Show the neural network predicted output compared to the real output
-plt.figure()
-y2 = nn1.yHat
-plt.plot(y,"red",y2,"blue")
-plt.title("y,yHat")
-# plt.xlabel("Iterations")
-# plt.ylabel("Errors")
-plt.show()
+
+#plt.figure()
+#y2 = nn1.yHat
+#plt.plot(y,"red",y2,"blue")
+#plt.title("y,yHat")
+#plt.show()
