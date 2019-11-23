@@ -164,8 +164,8 @@ plt.show()
 
 """
 if __name__ == "__main__":
-    pso = PSO(10)
-    n_iterations = 100
+    pso = PSO(20)
+    n_iterations = 10
     error_list = []
     yHat = 0
     # The start time to calculate how long the algorithm takes. 
@@ -195,11 +195,15 @@ if __name__ == "__main__":
     plt.figure()
 
     plt.plot(NN.y,"red",yHat,"blue")
+    plt.xlabel("Imput values")
+    plt.ylabel("Output values")
     plt.title("Desired vs Predicted output")
     plt.show()
 
     fitness = error_list
     plt.figure()
     plt.plot(fitness)
-    plt.title("Mean Square Error")
+    plt.xlabel("Number of iterations")
+    plt.ylabel("Mean square error")
+    plt.title("Mean Square Error per iteration")
     plt.show()
