@@ -20,7 +20,7 @@ class PSO:
         yHat_l: is a list to store the yHat values that is needed to plot a graph
         """
         self.n_networks = n_networks
-        self.networks = [NN_2.NeuralNetwork(NN_2.x,NN_2.y) for i in range(self.n_networks)]
+        self.networks = [NN.NeuralNetwork(NN.x,NN.y) for i in range(self.n_networks)]
         self.global_best_value = float("inf")
         self.global_best_position = NN.NeuralNetwork(NN.x,NN.y).getParams.shape
         self.global_best_yHat = 0
@@ -132,6 +132,7 @@ class PSO:
         for network in self.networks:
          # by calling the methods here, the optimization is automatic and I do not need to call them outside.
          # just by calling PSO(num_NN) it is done.
+    
             network.forward()
             network.mse()
             self.set_personal_best()
@@ -139,6 +140,17 @@ class PSO:
             self.set_informants_best()
             self.set_global_best()
             self.move_particles()
+
+            # Update of weights
+            W1 = network.position[0:3]
+            W2 = network.position[3:6]
+            network.W1 = np.reshape(W1,network.W1.shape) 
+            network.W2 = np.reshape(W2,network.W2.shape)
+            #print("Hola")
+            #print(network.W1)
+            network.b1 = network.position[6:7]
+            network.b2 = network.position[7]
+            #print(f"uno: {network.position},fitness:{network.fitness}")
             
 pso1 = PSO(10)
  
@@ -157,7 +169,7 @@ plt.show()
 
 """
 if __name__ == "__main__":
-    pso = PSO(20)
+    pso = PSO(10)
     n_iterations = 100
     error_list = []
     yHat = 0
@@ -186,6 +198,6 @@ if __name__ == "__main__":
     yHat = pso.global_best_yHat
     plt.figure()
 
-    plt.plot(NN_2.y,"red",yHat,"blue")
+    plt.plot(NN.y,"red",yHat,"blue")
     plt.title("y,yHat")
     plt.show()
