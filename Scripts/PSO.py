@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 import NN
+import NN_2
 
 class PSO:
     
@@ -19,7 +20,7 @@ class PSO:
         yHat_l: is a list to store the yHat values that is needed to plot a graph
         """
         self.n_networks = n_networks
-        self.networks = [NN.NeuralNetwork(NN.x,NN.y) for i in range(self.n_networks)]
+        self.networks = [NN_2.NeuralNetwork(NN_2.x,NN_2.y) for i in range(self.n_networks)]
         self.global_best_value = float("inf")
         self.global_best_position = NN.NeuralNetwork(NN.x,NN.y).getParams.shape
         self.global_best_yHat = 0
@@ -155,36 +156,36 @@ plt.title("y,yHat")
 plt.show()
 
 """
+if __name__ == "__main__":
+    pso = PSO(20)
+    n_iterations = 100
+    error_list = []
+    yHat = 0
+    # The start time to calculate how long the algorithm takes. 
+    start = time.process_time()
+    # Sets the number of starting iterations/epochs
 
-pso = PSO(20)
-n_iterations = 100
-error_list = []
-yHat = 0
-# The start time to calculate how long the algorithm takes. 
-start = time.process_time()
-# Sets the number of starting iterations/epochs
-
-iterations = 0
-while(iterations < n_iterations) or (pso.global_best_value == 0.):
+    iterations = 0
+    while(iterations < n_iterations):
     
-    print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
-    pso.optimise()
-    iterations +=1
-    print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
+        print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
+        pso.optimise()
+        iterations +=1
+        print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
 
     # Starting from the 1st iteration: prints the number of iterations, the global_best_value 
     # and the predicted(yHat) value. Also appends the global_best_value to the error_list
  
 
     #the global_best_value and the time taken to execute the algorithm
-print(f"GlobalBest: {pso.global_best_position} iters: {iterations} GlobalBestVal: {pso.global_best_value}")
-print(f"------------------------ total time taken: {time.process_time() - start} seconds") 
+    print(f"GlobalBest: {pso.global_best_position} iters: {iterations} GlobalBestVal: {pso.global_best_value}")
+    print(f"------------------------ total time taken: {time.process_time() - start} seconds") 
 
 
-# Show the graph
-yHat = pso.global_best_yHat
-plt.figure()
+    # Show the graph
+    yHat = pso.global_best_yHat
+    plt.figure()
 
-plt.plot(NN.y,"red",yHat,"blue")
-plt.title("y,yHat")
-plt.show()
+    plt.plot(NN_2.y,"red",yHat,"blue")
+    plt.title("y,yHat")
+    plt.show()
