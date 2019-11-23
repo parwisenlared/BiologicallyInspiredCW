@@ -28,6 +28,9 @@ def null(x):
     """Returns the null activation for a given variable x"""
     return x*0
 
+def relu(X):
+   return np.maximum(0,X)
+
 # ----- IMPUTS AND OUTPUTS ------------
 
 #Sinus
