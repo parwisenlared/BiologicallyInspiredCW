@@ -146,14 +146,9 @@ class PSO:
             W2 = network.position[3:6]
             network.W1 = np.reshape(W1,network.W1.shape) 
             network.W2 = np.reshape(W2,network.W2.shape)
-            #print("Hola")
-            #print(network.W1)
             network.b1 = network.position[6:7]
             network.b2 = network.position[7]
-            #print(f"uno: {network.position},fitness:{network.fitness}")
             
-pso1 = PSO(10)
- 
 
 """
 pso1.optimise()
