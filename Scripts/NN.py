@@ -93,7 +93,7 @@ class NeuralNetwork(object):
         self.imput = x
         self.output = y
         self.yHat = 0
-        self.fitness = float("inf") # At the beggining I put it as 0, but I understand the inf here for comparison.
+        self.fitness = float("inf") 
         
     
     def move(self):
@@ -133,20 +133,11 @@ class NeuralNetwork(object):
         return array
 
 
-# Steps to make the neural network work: first call the method neural network, then forward, then fitness
-# then call the variable network.fitness
+# Steps to make the neural network work: first call the method NeuralNetwork(x,y), then network.forward() and then network.mse()
+# The fitness of the network will be accessed by network.fitness
 
 #nn1 = NeuralNetwork(x,y)
 #nn1.forward()
 #nn1.mse() 
 
-# call fitness: nn1.fitness
-
-
-# Show the neural network predicted output compared to the real output
-
-#plt.figure()
-#y2 = nn1.yHat
-#plt.plot(y,"red",y2,"blue")
-#plt.title("y,yHat")
-#plt.show()
+#print(nn1.fitness)
