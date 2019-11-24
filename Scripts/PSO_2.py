@@ -194,7 +194,7 @@ if __name__ == "__main__":
     plt.figure()
 
     plt.plot(NN_2.y,"red",yHat,"blue")
-    plt.xlabel("Imput values")
+    plt.xlabel("Input values")
     plt.ylabel("Output values")
     plt.title("Desired vs Predicted output")
     plt.show()

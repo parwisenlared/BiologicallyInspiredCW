@@ -27,7 +27,7 @@ def gaussian(x):
 def relu(X):
    return np.maximum(0,X)
 
-# ----- IMPUTS AND OUTPUTS ------------
+# ----- INPUTS AND OUTPUTS ------------
 
 #Sinus
 data = np.loadtxt("Data/2in_xor.txt")
@@ -69,27 +69,27 @@ class NeuralNetwork(object):
         self.hiddenlayerSize=3
         
         #Network hyperparameters
-        self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)
-        self.W2 = np.random.randn(self.hiddenlayerSize, self.outputLayerSize)
-        self.a2_func = tanh
-        self.yHat_func = tanh
-        self.b1 = random.random()
-        self.b2 = random.random()
+       self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer
+        self.W2 = np.random.randn(self.hiddenlayerSize, self.outputLayerSize)   # Weights for the outputs of the Hidden Layer
+        self.a2_func = tanh     #Activation function for the Hidden Layer
+        self.yHat_func = tanh   #Activation function for the output layer 
+        self.b1 = random.random() #Bias 1
+        self.b2 = random.random()   #Bias 2
         
         #Particle parameters
-        self.position = self.getParams
-        self.personal_best_position = self.position
-        self.personal_best_value = float("inf")
-        self.velocity = np.zeros(self.getParams.shape)
-        self.informants = []
-        self.informants_best_value = float("inf")
-        self.informants_best_position = self.getParams
+        self.position = self.getParams  # position of particle - 8 dimensions as it contains 6 weights and 2 biases
+        self.personal_best_position = self.position # best postition of the particle so far
+        self.personal_best_value = float("inf") # best fitness (min mse) of the particle so far
+        self.velocity = np.zeros(self.getParams.shape)  # velocity of the particle with same dimensions as position
+        self.informants = []    # array ocontaining the informants for the particle
+        self.informants_best_value = float("inf")   # informant best value (min mse) - just one value evaluated over all informants best values
+        self.informants_best_position = self.getParams  # informants best position - just one best value (caclulated over all informants positions)
         
-        #Network imput, outputs, fitness
-        self.imput = x
+        #Network input, outputs, fitness
+        self.input = x
         self.output = y
-        self.yHat = 0
-        self.fitness = float("inf") # At the beggining I put it as 0, but I understand the inf here for comparison.
+        self.yHat = 0 # predicted output
+        self.fitness = float("inf") # Infinite - easier to be compared in PSO algorithm
         
     
     def move(self):
@@ -106,15 +106,19 @@ class NeuralNetwork(object):
         z2: is the dot product of input x and W1 plus bias(b1)
         a2: is the activation of the z2
         z3: is the dot product of a2 and W2 plus bias(b2)
-        yHat: is the activation of the z3
+        yHat: is the activation of the z3 - the predicted output
         """
-        self.z2 = np.dot(self.imput, self.W1) + self.b1       
+        self.z2 = np.dot(self.input, self.W1) + self.b1       
         self.a2 = self.a2_func(self.z2)                 
         self.z3 = np.dot(self.a2, self.W2) + self.b2 
         self.yHat = self.yHat_func(self.z3)      
         return self.yHat 
     
     def mse(self):
+        """ 
+        Returns the value of the Mean Square Error of the predicted output compared with the true output of the function
+        It is stored as the fitness of the Neural Network (fitness after feedforward) 
+        """
         mse = np.square(np.subtract(self.output,self.yHat)).mean()
         self.fitness = mse
         return mse

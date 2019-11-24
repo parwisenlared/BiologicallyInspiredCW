@@ -5,7 +5,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 import NN
-import NN_2
 
 class PSO:
     
@@ -79,25 +78,27 @@ class PSO:
                 
     def move_particles(self):
         """
-        The move_particles method contains:
-        
-        the Intertia weight(W)
-        Cognitive(c1)
-        Social(c2) weights of the PSO algorithm which can be adjusted.
+        The move_particles method contains: the Intertia weight(a), 
+        Cognitive(b), Social (c) and Informants (d) weights of the PSO algorithm which can be adjusted
+        and affect directly the value of the velocity.
+        There is an extra weight value (e) that is called the Jump and is used over the whole velocity.
         
         This method loops through a list of neural networks and stores the product of 
         of interia weight multiplied by network's velocity plus a random number multiplied 
         by the cognitive weight multiplied by the difference of the personal_best_position
         of the network and network's position plus the social weight into a random number
         multiplied by the difference of global_best_position of the networks and network's
-        position in a variable called new_velocity. It then assigns the network's velocity
-        to this variable and calls the move function from NeuralNetwork class. 
+        position plus the weighted value of the informants best position minus the network position
+        in a variable called new_velocity. 
+        
+        This will be weighted by the jump value and then it ssigns the network's velocity 
+        to this variable and calls the move function from the NeuralNetwork class. 
         """
         a = 0.5 # Intertia
-        b = 0.8 #Cognitive/personal velocity
+        b = 0.8 # Cognitive/personal velocity
         c = 0.9 # Social velocity
-        d = 1 # informants
-        e = 1 # Jump
+        d = 1   # informants
+        e = 1   # Jump
         
         for network in self.networks:
             new_velocity = (a*network.velocity) + (b*random.random())*\
@@ -106,35 +107,31 @@ class PSO:
             (d*random.random())*(network.informants_best_position - network.position)
             network.velocity = e*new_velocity
             network.move()
-            
-        # I added the Jump (the value is 1 by the pseudocode of the book they suggest, so does not affect)
-        # but I think we do need to put it.
         
     def optimise(self):
         """
-        The optimise method loops through a list of neural networks and:
+        The optimise method contains all the methods (from the Swarm/PSO class and the NN/Particle) 
+        needed to define an epoch/pass of the PSO algorithm (optimization of the ANN parameters).
+
+        forward() and mse() define an epoch of a particle (a pass of inputs)
+        set_personal_best(), set_informants(), set_informants_best(), set_global_best() and move_particles()
+        define the optimization of the ANN parameters.
+
+        To update the parameters of each particle (Neural Network: weights and biases)
+        the optimise method loops through a list of neural networks and:
         w1: takes the first three numbers from network's position array which is then 
         reshaped to the dimensions of the NeuralNetwork object's W1 parameter
         w2: takes the next three numbers from network's position array which is then 
         reshaped to the dimensions of the NeuralNetwork object's W2 parameter
         b1: takes the 7th item from the array
         b2: takes the 8th item from the array
-        
-        and uses these variables to forward propagate the neural network with these values.
-        z2: is the dot product of input(x) and w1 plus bias(b1)
-        a2: is the activation of the z2 using the activation function in NeuralNetwork class
-        z3: is the dot product of a2 and W2 plus bias(b2)
-        yHat: is the activation of the z3 using the activation function in NeuralNetwork class
-        yHat_l: the yHat values are stored in a list for plotting graphs
-        error: is calculated by using the Mean Square Error(mse) method using the target value(y)
-        and predicted value(yHat). The network's fitness is updated using the error.
         """
         for network in self.networks:
-         # by calling the methods here, the optimization is automatic and I do not need to call them outside.
-         # just by calling PSO(num_NN) it is done.
-    
+            # Epoch for each Particle or NN
             network.forward()
             network.mse()
+
+            # PSO algorithm methods
             self.set_personal_best()
             self.set_informants()
             self.set_informants_best()
@@ -150,52 +147,36 @@ class PSO:
             network.b2 = network.position[7]
             
 
-"""
-pso1.optimise()
-pso1.get_global_best()
-
-plt.figure()
-yHat1 = pso1.global_best_yHat
-plt.plot(NN.y,"red",yHat1,"blue")
-plt.title("y,yHat")
-# plt.xlabel("Iterations")
-# plt.ylabel("Errors")
-plt.show()
-
-"""
 if __name__ == "__main__":
     pso = PSO(20)
     n_iterations = 10
-    error_list = []
+    error_list = [] # holds the mse values
     yHat = 0
     # The start time to calculate how long the algorithm takes. 
     start = time.process_time()
+    
     # Sets the number of starting iterations/epochs
-
     iterations = 0
     while(iterations < n_iterations):
     
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
-        pso.optimise()
-        error_list.append(pso.global_best_value)
+        pso.optimise() 
+        error_list.append(pso.global_best_value) # adds the mse best value to create a plot later
         iterations +=1
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
 
-    # Starting from the 1st iteration: prints the number of iterations, the global_best_value 
-    # and the predicted(yHat) value. Also appends the global_best_value to the error_list
- 
 
-    #the global_best_value and the time taken to execute the algorithm
+    #Prints the global_best_value and the time taken to execute the algorithm
     print(f"GlobalBest: {pso.global_best_position} iters: {iterations} GlobalBestVal: {pso.global_best_value}")
     print(f"------------------------ total time taken: {time.process_time() - start} seconds") 
 
 
-    # Show the graph
+    # Graphs for the global best output and best value 
     yHat = pso.global_best_yHat
     plt.figure()
 
     plt.plot(NN.y,"red",yHat,"blue")
-    plt.xlabel("Imput values")
+    plt.xlabel("Input values")
     plt.ylabel("Output values")
     plt.title("Desired vs Predicted output")
     plt.show()

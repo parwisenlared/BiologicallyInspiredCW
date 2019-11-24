@@ -31,7 +31,7 @@ def null(x):
 def relu(X):
    return np.maximum(0,X)
 
-# ----- IMPUTS AND OUTPUTS ------------
+# ----- INPUTS AND OUTPUTS ------------
 
 #Sinus
 data = np.loadtxt("Data/1in_sine.txt")
@@ -67,33 +67,33 @@ class NeuralNetwork(object):
         self.velocity: is initialised at 0 in the shape of the position array
         """
         
-        #Network architecture 
+        #Network architecture
         self.inputLayerSize=1
         self.outputLayerSize=1
         self.hiddenlayerSize=3
         
         #Network hyperparameters
-        self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)
-        self.W2 = np.random.randn(self.hiddenlayerSize, self.outputLayerSize)
-        self.a2_func = tanh
-        self.yHat_func = tanh
-        self.b1 = random.random()
-        self.b2 = random.random()
+        self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer
+        self.W2 = np.random.randn(self.hiddenlayerSize, self.outputLayerSize)   # Weights for the outputs of the Hidden Layer
+        self.a2_func = tanh     #Activation function for the Hidden Layer
+        self.yHat_func = tanh   #Activation function for the output layer 
+        self.b1 = random.random() #Bias 1
+        self.b2 = random.random()   #Bias 2
         
         #Particle parameters
-        self.position = self.getParams
-        self.personal_best_position = self.position
-        self.personal_best_value = float("inf")
-        self.velocity = np.zeros(self.getParams.shape)
-        self.informants = []
-        self.informants_best_value = float("inf")
-        self.informants_best_position = self.getParams
+        self.position = self.getParams  # position of particle - 8 dimensions as it contains 6 weights and 2 biases
+        self.personal_best_position = self.position # best postition of the particle so far
+        self.personal_best_value = float("inf") # best fitness (min mse) of the particle so far
+        self.velocity = np.zeros(self.getParams.shape)  # velocity of the particle with same dimensions as position
+        self.informants = []    # array ocontaining the informants for the particle
+        self.informants_best_value = float("inf")   # informant best value (min mse) - just one value evaluated over all informants best values
+        self.informants_best_position = self.getParams  # informants best position - just one best value (caclulated over all informants positions)
         
-        #Network imput, outputs, fitness
-        self.imput = x
+        #Network input, outputs, fitness
+        self.input = x
         self.output = y
-        self.yHat = 0
-        self.fitness = float("inf") 
+        self.yHat = 0 # predicted output
+        self.fitness = float("inf") # Infinite - easier to be compared in PSO algorithm
         
     
     def move(self):
@@ -112,7 +112,7 @@ class NeuralNetwork(object):
         z3: is the dot product of a2 and W2 plus bias(b2)
         yHat: is the activation of the z3
         """
-        self.z2 = np.dot(self.imput, self.W1) + self.b1       
+        self.z2 = np.dot(self.input, self.W1) + self.b1       
         self.a2 = self.a2_func(self.z2)                 
         self.z3 = np.dot(self.a2, self.W2) + self.b2 
         self.yHat = self.yHat_func(self.z3)      
