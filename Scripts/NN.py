@@ -70,7 +70,7 @@ class NeuralNetwork(object):
         #Network architecture
         self.inputLayerSize=1
         self.outputLayerSize=1
-        self.hiddenlayerSize=6
+        self.hiddenlayerSize=3
         
         #Network hyperparameters
         self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer

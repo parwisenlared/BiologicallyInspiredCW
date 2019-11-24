@@ -30,7 +30,7 @@ def relu(X):
 # ----- INPUTS AND OUTPUTS ------------
 
 #Sinus
-data = np.loadtxt("Data/2in_xor.txt")
+data = np.loadtxt("Data/2in_complex.txt")
 x = data[:, :2] # All input variables stored as x
 y = data[:, 2:] # All test variables stored as y
 
@@ -66,7 +66,7 @@ class NeuralNetwork(object):
         #Network architecture 
         self.inputLayerSize=2
         self.outputLayerSize=1
-        self.hiddenlayerSize=6
+        self.hiddenlayerSize=3
         
         #Network hyperparameters
         self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer

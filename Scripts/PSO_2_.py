@@ -144,12 +144,12 @@ class PSO:
             self.move_particles()
 
             # Update of weights
-            W1 = network.position[0:12]
-            W2 = network.position[12:18]
+            W1 = network.position[0:6]
+            W2 = network.position[6:9]
             network.W1 = np.reshape(W1,network.W1.shape) 
             network.W2 = np.reshape(W2,network.W2.shape)
-            network.b1 = network.position[18:19]
-            network.b2 = network.position[19]
+            network.b1 = network.position[9:10]
+            network.b2 = network.position[10]
             
 
 """
@@ -181,10 +181,6 @@ if __name__ == "__main__":
         yHat = pso.global_best_yHat
 
         iterations +=1
-
-    # Starting from the 1st iteration: prints the number of iterations, the global_best_value 
-    # and the predicted(yHat) value. Also appends the global_best_value to the error_list
- 
 
     #the global_best_value and the time taken to execute the algorithm
     print(f"GlobalBest: {pso.global_best_position} iters: {iterations} GlobalBestVal: {pso.global_best_value}")
