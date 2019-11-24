@@ -24,6 +24,9 @@ def gaussian(x):
     """Returns the gaussian activation for a given variable x"""
     return np.exp(-((x**2)/2))
 
+def relu(X):
+   return np.maximum(0,X)
+
 # ----- IMPUTS AND OUTPUTS ------------
 
 #Sinus
