@@ -47,7 +47,7 @@ class PSO:
     # The variable informants is in each network, here I just create informants for each of them.
     def set_informants(self):
         for network in self.networks:
-            informants = random.choices(self.networks, k=3) # 3 informants for each particle
+            informants = random.choices(self.networks, k=6) # 3 informants for each particle
             network.informants = informants
     
     # In this funcion I am instantiating the best_value of each informant in     
@@ -78,31 +78,34 @@ class PSO:
                 
     def move_particles(self):
         """
-        The move_particles method contains:
-        
-        the Intertia weight(W)
-        Cognitive(c1)
-        Social(c2) weights of the PSO algorithm which can be adjusted.
+        The move_particles method contains: the Intertia weight(a), 
+        Cognitive(b), Social (c) and Informants (d) weights of the PSO algorithm which can be adjusted
+        and affect directly the value of the velocity.
+        There is an extra weight value (e) that is called the Jump and is used over the whole velocity.
         
         This method loops through a list of neural networks and stores the product of 
         of interia weight multiplied by network's velocity plus a random number multiplied 
         by the cognitive weight multiplied by the difference of the personal_best_position
         of the network and network's position plus the social weight into a random number
         multiplied by the difference of global_best_position of the networks and network's
-        position in a variable called new_velocity. It then assigns the network's velocity
-        to this variable and calls the move function from NeuralNetwork class. 
+        position plus the weighted value of the informants best position minus the network position
+        in a variable called new_velocity. 
+        
+        This will be weighted by the jump value and then it ssigns the network's velocity 
+        to this variable and calls the move function from the NeuralNetwork class. 
         """
-        a = 0.5 # Intertia
-        b = 0.8 #Cognitive/personal velocity
-        c = 0.9 # Social velocity
-        d = 1 # informants
-        e = 1 # Jump
+        a = 0.5 # Intertia: proportion of velocity to be retained
+        b = 0.8 # Cognitive/personal velocity: proportion of personal best to be retained
+        c = 1   # Social velocity: proportion of the informants' best to be retained
+        d = 0.9 # Global: proportion of global best to be retained
+        e = 1   # Jump size of a particle
         
         for network in self.networks:
             new_velocity = (a*network.velocity) + (b*random.random())*\
             (network.personal_best_position - network.position) +\
-            (c*random.random())*(self.global_best_position - network.position) + \
-            (d*random.random())*(network.informants_best_position - network.position)
+            (c*random.random())*(network.informants_best_position - network.position) +\
+            (d*random.random())*(self.global_best_position - network.position)
+            
             network.velocity = e*new_velocity
             network.move()
             
@@ -141,12 +144,12 @@ class PSO:
             self.move_particles()
 
             # Update of weights
-            W1 = network.position[0:6]
-            W2 = network.position[6:9]
+            W1 = network.position[0:12]
+            W2 = network.position[12:18]
             network.W1 = np.reshape(W1,network.W1.shape) 
             network.W2 = np.reshape(W2,network.W2.shape)
-            network.b1 = network.position[9:10]
-            network.b2 = network.position[10]
+            network.b1 = network.position[18:19]
+            network.b2 = network.position[19]
             
 
 """
@@ -163,8 +166,8 @@ plt.show()
 
 """
 if __name__ == "__main__":
-    pso = PSO(20)
-    n_iterations = 10
+    pso = PSO(10)
+    n_iterations = 150
     error_list = []
     yHat = 0
     # The start time to calculate how long the algorithm takes. 
@@ -173,12 +176,11 @@ if __name__ == "__main__":
 
     iterations = 0
     while(iterations < n_iterations):
-    
-        print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
         pso.optimise()
         error_list.append(pso.global_best_value)
+        yHat = pso.global_best_yHat
+
         iterations +=1
-        print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
 
     # Starting from the 1st iteration: prints the number of iterations, the global_best_value 
     # and the predicted(yHat) value. Also appends the global_best_value to the error_list

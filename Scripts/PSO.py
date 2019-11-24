@@ -3,6 +3,7 @@ import numpy as np
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import time
 import NN
 
@@ -15,8 +16,7 @@ class PSO:
         networks: is a list to store the initialised networks
         global_best_value: is initialised as infinity
         global_best_position: gets its shape from the Neural Network's getParams function
-        yHat: is initialised at floating point 0. It is needed to plot a graph
-        yHat_l: is a list to store the yHat values that is needed to plot a graph
+        global_best_yHat: is initialised at floating point 0. Useful for future plotting of graphs.
         """
         self.n_networks = n_networks
         self.networks = [NN.NeuralNetwork(NN.x,NN.y) for i in range(self.n_networks)]
@@ -47,7 +47,7 @@ class PSO:
     # The variable informants is in each network, here I just create informants for each of them.
     def set_informants(self):
         for network in self.networks:
-            informants = random.choices(self.networks, k=3) # 3 informants for each particle
+            informants = random.choices(self.networks, k=6) # 3 informants for each particle
             network.informants = informants
     
     # In this funcion I am instantiating the best_value of each informant in     
@@ -94,17 +94,17 @@ class PSO:
         This will be weighted by the jump value and then it ssigns the network's velocity 
         to this variable and calls the move function from the NeuralNetwork class. 
         """
-        a = 0.5 # Intertia
-        b = 0.8 # Cognitive/personal velocity
-        c = 0.9 # Social velocity
-        d = 1   # informants
-        e = 1   # Jump
+        a = 0.5 # Intertia: proportion of velocity to be retained
+        b = 0.8 # Cognitive/personal velocity: proportion of personal best to be retained
+        c = 1 # Social velocity: proportion of the informants' best to be retained
+        d = 0.9   # Global: proportion of global best to be retained
+        e = 1   # Jump size of a particle
         
         for network in self.networks:
             new_velocity = (a*network.velocity) + (b*random.random())*\
             (network.personal_best_position - network.position) +\
-            (c*random.random())*(self.global_best_position - network.position) + \
-            (d*random.random())*(network.informants_best_position - network.position)
+            (c*random.random())*(network.informants_best_position - network.position) +\
+            (d*random.random())*(self.global_best_position - network.position)
             network.velocity = e*new_velocity
             network.move()
         
@@ -139,20 +139,22 @@ class PSO:
             self.move_particles()
 
             # Update of weights
-            W1 = network.position[0:3]
-            W2 = network.position[3:6]
+            W1 = network.position[0:6]
+            W2 = network.position[6:12]
             network.W1 = np.reshape(W1,network.W1.shape) 
             network.W2 = np.reshape(W2,network.W2.shape)
-            network.b1 = network.position[6:7]
-            network.b2 = network.position[7]
+            network.b1 = network.position[12:13]
+            network.b2 = network.position[13]
             
 
 if __name__ == "__main__":
-    pso = PSO(20)
-    n_iterations = 10
+    pso = PSO(10)
+    n_iterations = 100
     error_list = [] # holds the mse values
-    yHat = 0
-    # The start time to calculate how long the algorithm takes. 
+    yHat = []
+    
+    
+     # The start time to calculate how long the algorithm takes. 
     start = time.process_time()
     
     # Sets the number of starting iterations/epochs
@@ -162,14 +164,14 @@ if __name__ == "__main__":
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
         pso.optimise() 
         error_list.append(pso.global_best_value) # adds the mse best value to create a plot later
+        yHat = pso.global_best_yHat
+        
         iterations +=1
         print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
-
-
+   
     #Prints the global_best_value and the time taken to execute the algorithm
     print(f"GlobalBest: {pso.global_best_position} iters: {iterations} GlobalBestVal: {pso.global_best_value}")
     print(f"------------------------ total time taken: {time.process_time() - start} seconds") 
-
 
     # Graphs for the global best output and best value 
     yHat = pso.global_best_yHat

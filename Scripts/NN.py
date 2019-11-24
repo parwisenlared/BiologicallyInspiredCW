@@ -34,7 +34,7 @@ def relu(X):
 # ----- INPUTS AND OUTPUTS ------------
 
 #Sinus
-data = np.loadtxt("Data/1in_sine.txt")
+data = np.loadtxt("Data/1in_tanh.txt")
 x = data[:, :1] # All input variables stored as x
 y = data[:, 1:] # All test variables stored as y
 
@@ -70,7 +70,7 @@ class NeuralNetwork(object):
         #Network architecture
         self.inputLayerSize=1
         self.outputLayerSize=1
-        self.hiddenlayerSize=3
+        self.hiddenlayerSize=6
         
         #Network hyperparameters
         self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer
@@ -110,7 +110,7 @@ class NeuralNetwork(object):
         z2: is the dot product of input x and W1 plus bias(b1)
         a2: is the activation of the z2
         z3: is the dot product of a2 and W2 plus bias(b2)
-        yHat: is the activation of the z3
+        yHat: is the activation of the z3 - the predicted output
         """
         self.z2 = np.dot(self.input, self.W1) + self.b1       
         self.a2 = self.a2_func(self.z2)                 
@@ -119,6 +119,10 @@ class NeuralNetwork(object):
         return self.yHat 
     
     def mse(self):
+        """ 
+        Returns the value of the Mean Square Error of the predicted output compared with the true output of the function
+        It is stored as the fitness of the Neural Network (fitness after feedforward) 
+        """
         mse = np.square(np.subtract(self.output,self.yHat)).mean()
         self.fitness = mse
         return mse

@@ -66,10 +66,10 @@ class NeuralNetwork(object):
         #Network architecture 
         self.inputLayerSize=2
         self.outputLayerSize=1
-        self.hiddenlayerSize=3
+        self.hiddenlayerSize=6
         
         #Network hyperparameters
-       self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer
+        self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer
         self.W2 = np.random.randn(self.hiddenlayerSize, self.outputLayerSize)   # Weights for the outputs of the Hidden Layer
         self.a2_func = tanh     #Activation function for the Hidden Layer
         self.yHat_func = tanh   #Activation function for the output layer 
