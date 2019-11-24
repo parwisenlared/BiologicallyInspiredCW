@@ -47,7 +47,7 @@ class PSO:
     # The variable informants is in each network, here I just create informants for each of them.
     def set_informants(self):
         for network in self.networks:
-            informants = random.choices(self.networks, k=6) # 3 informants for each particle
+            informants = random.choices(self.networks, k=3) # 3 informants for each particle
             network.informants = informants
     
     # In this funcion I am instantiating the best_value of each informant in     
@@ -167,7 +167,7 @@ plt.show()
 """
 if __name__ == "__main__":
     pso = PSO(10)
-    n_iterations = 150
+    n_iterations = 100
     error_list = []
     yHat = 0
     # The start time to calculate how long the algorithm takes. 

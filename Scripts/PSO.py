@@ -47,7 +47,7 @@ class PSO:
     # The variable informants is in each network, here I just create informants for each of them.
     def set_informants(self):
         for network in self.networks:
-            informants = random.choices(self.networks, k=6) # 3 informants for each particle
+            informants = random.choices(self.networks, k=3) # 3 informants for each particle
             network.informants = informants
     
     # In this funcion I am instantiating the best_value of each informant in     
@@ -161,18 +161,12 @@ if __name__ == "__main__":
     iterations = 0
     while(iterations < n_iterations):
     
-        print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
         pso.optimise() 
         error_list.append(pso.global_best_value) # adds the mse best value to create a plot later
         yHat = pso.global_best_yHat
         
         iterations +=1
-        print(f"Iteration:{str(iterations)} Error:{pso.global_best_value}")
    
-    #Prints the global_best_value and the time taken to execute the algorithm
-    print(f"GlobalBest: {pso.global_best_position} iters: {iterations} GlobalBestVal: {pso.global_best_value}")
-    print(f"------------------------ total time taken: {time.process_time() - start} seconds") 
-
     # Graphs for the global best output and best value 
     yHat = pso.global_best_yHat
     plt.figure()
