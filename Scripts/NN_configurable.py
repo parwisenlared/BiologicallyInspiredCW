@@ -34,7 +34,7 @@ def relu(X):
 # ----- INPUTS AND OUTPUTS ------------
 
 #Sinus
-data = np.loadtxt("Data/1in_tanh.txt")
+data = np.loadtxt("Data/1in_linear.txt")
 x = data[:, :1] # All input variables stored as x
 y = data[:, 1:] # All test variables stored as y
 
@@ -42,7 +42,7 @@ y = data[:, 1:] # All test variables stored as y
 
 class NeuralNetwork(object):
     
-    def __init__(self, x, y):
+    def __init__(self, x, y, neuron):
         """
         The NeuralNetwork object has a fitness attribute that is initialised at infinity
         and will will be updated
@@ -56,27 +56,38 @@ class NeuralNetwork(object):
         W2: weights from the hidden layer to the output layer. Randomly initialised
         a2_func: activation function of the hidden layer
         yHat_func: activation of the output layer
-        b1: input to hidden bias
-        b2: hidden to output bias
+        b1: input to hidden layer bias
+        b2: hidden to output layer bias
         
         The Particle Parameters:
         ------------------------
         position: uses the getParams function which yields an array of parameter values
         personal_best_position: is initialised as current position
         personal_best_value: is initialised at infinity
-        self.velocity: is initialised at 0 in the shape of the position array
+        velocity: is initialised at 0 in the shape of the position array
+        informants: array ocontaining the informants of the particle
+        informants_best_value: informant best value (min mse) - just one value evaluated over all informants best values
+        informants_bes_position: informants best position - just one best value (caclulated over all informants positions)
+        
+        Other parameters of the network:
+        --------------------------------
+        input: holds the input data of the function given at initializing the NN
+        output: holds the output data of the function given at initializing the NN
+        yHat: holds the predicted output. Initialized to 0, once feedforward is called it will hold an array with the predicted values
+        fitness: MSE between the predicted and the true output. Initialized to infinity (to ease the comparison).
         """
         
         #Network architecture
         self.inputLayerSize=1
         self.outputLayerSize=1
-        self.hiddenlayerSize=3
+        #self.hiddenlayerSize= int(input("Inform the number of neurons in hidden layer of NN (particle): "))
+        self.hiddenlayerSize = neuron
         
         #Network hyperparameters
         self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer
         self.W2 = np.random.randn(self.hiddenlayerSize, self.outputLayerSize)   # Weights for the outputs of the Hidden Layer
-        self.a2_func = tanh     #Activation function for the Hidden Layer
-        self.yHat_func = tanh   #Activation function for the output layer 
+        self.a2_func = relu     #Activation function for the Hidden Layer
+        self.yHat_func = relu   #Activation function for the output layer 
         self.b1 = random.random() #Bias 1
         self.b2 = random.random()   #Bias 2
         
@@ -94,6 +105,11 @@ class NeuralNetwork(object):
         self.output = y
         self.yHat = 0 # predicted output
         self.fitness = float("inf") # Infinite - easier to be compared in PSO algorithm
+
+        #Params
+        self.pw1 = self.W1.ravel()
+        self.pw2 = self.W2.ravel()
+    
         
     
     def move(self):
@@ -127,6 +143,10 @@ class NeuralNetwork(object):
         self.fitness = mse
         return mse
     
+    def params(self):
+        self.pw1 = self.W1.ravel()
+        self.pw2 = self.W2.ravel()
+
     @property
     def getParams(self):
         """Returns the parameters of the neural network in an array that can be used in PSO"""
@@ -140,8 +160,9 @@ class NeuralNetwork(object):
 # Steps to make the neural network work: first call the method NeuralNetwork(x,y), then network.forward() and then network.mse()
 # The fitness of the network will be accessed by network.fitness
 
-#nn1 = NeuralNetwork(x,y)
+#nn1 = NeuralNetwork(x,y, )
 #nn1.forward()
 #nn1.mse() 
+#nn1.params()
 
-#print(nn1.fitness)
+#print(f"The following number is the fitness: {nn1.fitness}")

@@ -30,7 +30,7 @@ def relu(X):
 # ----- INPUTS AND OUTPUTS ------------
 
 #Sinus
-data = np.loadtxt("Data/2in_complex.txt")
+data = np.loadtxt("Data/2in_xor.txt")
 x = data[:, :2] # All input variables stored as x
 y = data[:, 2:] # All test variables stored as y
 
@@ -38,7 +38,7 @@ y = data[:, 2:] # All test variables stored as y
 
 class NeuralNetwork(object):
     
-    def __init__(self, x, y):
+    def __init__(self, x, y, neuron):
         """
         The NeuralNetwork object has a fitness attribute that is initialised at infinity
         and will will be updated
@@ -66,7 +66,8 @@ class NeuralNetwork(object):
         #Network architecture 
         self.inputLayerSize=2
         self.outputLayerSize=1
-        self.hiddenlayerSize=3
+        #self.hiddenlayerSize=3
+        self.hiddenlayerSize = neuron
         
         #Network hyperparameters
         self.W1 = np.random.randn(self.inputLayerSize, self.hiddenlayerSize)    # Weights for Input Layer
@@ -90,6 +91,10 @@ class NeuralNetwork(object):
         self.output = y
         self.yHat = 0 # predicted output
         self.fitness = float("inf") # Infinite - easier to be compared in PSO algorithm
+
+        #Params
+        self.pw1 = self.W1.ravel()
+        self.pw2 = self.W2.ravel()
         
     
     def move(self):
